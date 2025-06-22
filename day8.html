@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Variables & Basics - Day 8</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --secondary-color: #8b5cf6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --dark-color: #1f2937;
+            --light-color: #f8fafc;
+            --code-bg: #1e293b;
+            --console-bg: #0f172a;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--dark-color);
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .task-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .task-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .task-number {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .console-output {
+            background: var(--console-bg);
+            color: #22c55e;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            border: 1px solid #374151;
+            min-height: 50px;
+        }
+
+        .console-output .error {
+            color: #ef4444;
+        }
+
+        .console-output .warning {
+            color: #f59e0b;
+        }
+
+        .console-output .info {
+            color: #3b82f6;
+        }
+
+        .run-button {
+            background: linear-gradient(45deg, var(--success-color), #059669);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .run-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .keyword {
+            color: #c084fc;
+            font-weight: 600;
+        }
+
+        .string {
+            color: #fbbf24;
+        }
+
+        .number {
+            color: #60a5fa;
+        }
+
+        .boolean {
+            color: #34d399;
+        }
+
+        .comment {
+            color: #9ca3af;
+            font-style: italic;
+        }
+
+        .variable {
+            color: #f472b6;
+        }
+
+        .function {
+            color: #a78bfa;
+        }
+
+        .output-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .live-demo {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border: 2px dashed #0ea5e9;
+        }
+
+        .demo-result {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .task-card {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .task-card:nth-child(even) {
+            animation-delay: 0.1s;
+        }
+
+        .badge-concept {
+            background: linear-gradient(45deg, var(--warning-color), #ea580c);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="container">
+            <div class="text-center">
+                <h1 class="display-4 fw-bold mb-3">
+                    <i class="bi bi-code-slash"></i> JavaScript Variables & Basics
+                </h1>
+                <p class="lead">Day 8 Tasks - Master JavaScript Fundamentals</p>
+                <div class="d-flex justify-content-center flex-wrap gap-2 mt-3">
+                    <span class="badge bg-primary">Variables</span>
+                    <span class="badge bg-success">Data Types</span>
+                    <span class="badge bg-warning">Arrays</span>
+                    <span class="badge bg-info">Objects</span>
+                    <span class="badge bg-secondary">Scope</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Task 1: Declare Variables -->
+        <div class="task-card">
+            <div class="task-number">1</div>
+            <h3 class="mb-3">Declare Variables <span class="badge-concept">let, var, const</span></h3>
+            <p class="text-muted mb-3">Declare three variables: name, age, and isStudent with appropriate values.</p>
+            
+            <div class="code-block">
+<span class="comment">// Declaring variables with different data types</span>
+<span class="keyword">let</span> <span class="variable">name</span> = <span class="string">"Alex Johnson"</span>;
+<span class="keyword">let</span> <span class="variable">age</span> = <span class="number">25</span>;
+<span class="keyword">let</span> <span class="variable">isStudent</span> = <span class="boolean">true</span>;
+
+<span class="comment">// Display the variables</span>
+<span class="function">console.log</span>(<span class="string">"Name:"</span>, <span class="variable">name</span>);
+<span class="function">console.log</span>(<span class="string">"Age:"</span>, <span class="variable">age</span>);
+<span class="function">console.log</span>(<span class="string">"Is Student:"</span>, <span class="variable">isStudent</span>);
+            </div>
+            
+            <button class="run-button" onclick="runTask1()">
+                <i class="bi bi-play-fill"></i> Run Code
+            </button>
+            
+            <div class="console-output" id="output1"></div>
+        </div>
+
+        <!-- Task 2: Calculate Total -->
+        <div class="task-card">
+            <div class="task-number">2</div>
+            <h3 class="mb-3">Calculate Total <span class="badge-concept">Arithmetic</span></h3>
+            <p class="text-muted mb-3">Declare numeric variables and calculate their sum.</p>
+            
+            <div class="code-block">
+<span class="comment">// Declaring numeric variables</span>
+<span class="keyword">let</span> <span class="variable">num1</span> = <span class="number">15</span>;
+<span class="keyword">let</span> <span class="variable">num2</span> = <span class="number">27</span>;
+
+<span class="comment">// Calculate the sum</span>
+<span class="keyword">let</span> <span class="variable">sum</span> = <span class="variable">num1</span> + <span class="variable">num2</span>;
+
+<span class="comment">// Display the result</span>
+<span class="function">console.log</span>(<span class="string">`${num1} + ${num2} = ${sum}`</span>);
+<span class="function">console.log</span>(<span class="string">"Sum:"</span>, <span class="variable">sum</span>);
+            </div>
+            
+            <button class="run-button" onclick="runTask2()">
+                <i class="bi bi-play-fill"></i> Run Code
+            </button>
+            
+            <div class="console-output" id="output2"></div>
+        </div>
+
+        <!-- Task 3: String Concatenation -->
+        <div class="task-card">
+            <div class="task-number">3</div>
+            <h3 class="mb-3">String Concatenation <span class="badge-concept">Strings</span></h3>
+            <p class="text-muted mb-3">Combine first and last names using string concatenation.</p>
+            
+            <div class="code-block">
+<span class="comment">// Declaring string variables</span>
+<span class="keyword">let</span> <span class="variable">firstName</span> = <span class="string">"Sarah"</span>;
+<span class="keyword">let</span> <span class="variable">lastName</span> = <span class="string">"Williams"</span>;
+
+<span class="comment">// String concatenation methods</span>
+<span class="keyword">let</span> <span class="variable">fullName1</span> = <span class="variable">firstName</span> + <span class="string">" "</span> + <span class="variable">lastName</span>; <span class="comment">// Traditional</span>
+<span class="keyword">let</span> <span class="variable">fullName2</span> = <span class="string">`${firstName} ${lastName}`</span>; <span class="comment">// Template literals</span>
+
+<span class="function">console.log</span>(<span class="string">"Method 1:"</span>, <span class="variable">fullName1</span>);
+<span class="function">console.log</span>(<span class="string">"Method 2:"</span>, <span class="variable">fullName2</span>);
+            </div>
+            
+            <button class="run-button" onclick="runTask3()">
+                <i class="bi bi-play-fill"></i> Run Code
+            </button>
+            
+            <div class="console-output" id="output3"></div>
+        </div>
+
+        <!-- Task 4: Constants -->
+        <div class="task-card">
+            <div class="task-number">4</div>
+            <h3 class="mb-3">Constants <span class="badge-concept">const</span></h3>
+            <p class="text-muted mb-3">Declare a constant and observe what happens when trying to reassign it.</p>
+            
+            <div class="code-block">
+<span class="comment">// Declaring a constant</span>
+<span class="keyword">const</span> <span class="variable">PI</span> = <span class="number">3.14159</span>;
+<span class="function">console.log</span>(<span class="string">"PI value:"</span>, <span class="variable">PI</span>);
+
+<span class="comment">// Attempting to reassign (this will cause an error)</span>
+<span class="keyword">try</span> {
+    <span class="variable">PI</span> = <span class="number">3.14</span>; <span class="comment">// This will throw an error</span>
+} <span class="keyword">catch</span> (<span class="variable">error</span>) {
+    <span class="function">console.log</span>(<span class="string">"Error:"</span>, <span class="variable">error.message</span>);
+}
+            </div>
+            
+            <button class="run-button" onclick="runTask4()">
+                <i class="bi bi-play-fill"></i> Run Code
+            </button>
+            
+            <div class="console-output" id="output4"></div>
+        </div>
+
+        <!-- Task 5: Boolean Variables -->
+        <div class="task-card">
+            <div class="task-number">5</div>
+            <h3 class="mb-3">Boolean Variables <span class="badge-concept">if/else</span></h3>
+            <p class="text-muted mb-3">Use boolean variables with conditional statements.</p>
+            
+            <div class="code-block">
+<span class="comment">// Boolean variable</span>
+<span class="keyword">let</span> <span class="variable">isSunny</span> = <span class="boolean">true</span>;
+
+<span class="comment">// Conditional statement</span>
+<span class="keyword">if</span> (<span class="variable">isSunny</span>) {
+    <span class="function">console.log</span>(<span class="string">"☀️ It's a sunny day! Perfect for outdoor activities."</span>);
+} <span class="keyword">else</span> {
+    <span class="function">console.log</span>(<span class="string">"🌧️ It's not sunny. Maybe stay indoors."</span>);
+}
+
+<span class="comment">// Test with false value</span>
+<span class="variable">isSunny</span> = <span class="boolean">false</span>;
+<span class="keyword">if</span> (<span class="variable">isSunny</span>) {
+    <span class="function">console.log</span>(<span class="string">"☀️ It's sunny!"</span>);
+} <span class="keyword">else</span> {
+    <span class="function">console.log</span>(<span class="string">"🌧️ Not sunny today."</span>);
+}
+            </div>
+            
+            <button class="run-button" onclick="runTask5()">
+                <i class="bi bi-play-fill"></i> Run Code
+            </button>
+            
+            <div class="console-output" id="output5"></div>
+        </div>
+
+        <!-- Task 6: Working with Arrays -->
+        <div class="task-card">
+            <div class="task-number">6</div>
+            <h3 class="mb-3">Working with Arrays <span class="badge-concept">Arrays</span></h3>
+            <p class="text-muted mb-3">Create and manipulate arrays with fruit names.</p>
+            
+            <div class="code-block">
+<span class="comment">// Declaring an array</span>
+<span class="keyword">let</span> <span class="variable">fruits</span> = [<span class="string">"apple"</span>, <span class="string">"banana"</span>, <span class="string">"orange"</span>];
+
+<span class="comment">// Access second element (index 1)</span>
+<span class="function">console.log</span>(<span class="string">"Second fruit:"</span>, <span class="variable">fruits</span>[<span class="number">1</span>]);
+
+<span class="comment">// Add a new fruit</span>
+<span class="variable">fruits</span>.<span class="function">push</span>(<span class="string">"grape"</span>);
+
+<span class="comment">// Display updated array</span>
+<span class="function">console.log</span>(<span class="string">"Updated fruits array:"</span>, <span class="variable">fruits</span>);
+<span class="function">console.log</span>(<span class="string">"Array length:"</span>, <span class="variable">fruits</span>.<span class="variable">length</span>);
+            </div>
+            
+            <button class="run-button" onclick="runTask6()">
+                <i class="bi bi-play-fill"></i> Run Code
+            </button>
+            
+            <div class="console-output" id="output6"></div>
+        </div>
+
+        <!-- Task 7: Object Variables -->
+        <div class="task-card">
+            <div class="task-number">7</div>
+            <h3 class="mb-3">Object Variables <span class="badge-concept">Objects</span></h3>
+            <p class="text-muted mb-3">Create and access object properties using dot notation.</p>
+            
+            <div class="code-block">
+<span class="comment">// Creating an object</span>
+<span class="keyword">let</span> <span class="variable">person</span> = {
+    <span class="variable">name</span>: <span class="string">"Emma Thompson"</span>,
+    <span class="variable">age</span>: <span class="number">28</span>,
+    <span class="variable">city</span>: <span class="string">"New York"</span>
+};
+
+<span class="comment">// Accessing properties with dot notation</span>
+<span class="function">console.log</span>(<span class="string">"Person's name:"</span>, <span class="variable">person</span>.<span class="variable">name</span>);
+<span class="function">console.log</span>(<span class="string">"Person's age:"</span>, <span class="variable">person</span>.<span class="variable">age</span>);
+
+<span class="comment">// Accessing with bracket notation</span>
+<span class="function">console.log</span>(<span class="string">"Person's city:"</span>, <span class="variable">person</span>[<span class="string">"city"</span>]);
+
+<span class="comment">// Display entire object</span>
+<span class="function">console.log</span>(<span class="string">"Complete person object:"</span>, <span class="variable">person</span>);
+            </div>
+            
+            <button class="run-button" onclick="runTask7()">
+                <i class="bi bi-play-fill"></i> Run Code
+            </button>
+            
+            <div class="console-output" id="output7"></div>
+        </div>
+
+        <!-- Task 8: Variable Scope -->
+        <div class="task-card">
+            <div class="task-number">8</div>
+            <h3 class="mb-3">Variable Scope <span class="badge-concept">Scope</span></h3>
+            <p class="text-muted mb-3">Understand global and local variable scope.</p>
+            
+            <div class="code-block">
+<span class="comment">// Global variable</span>
+<span class="keyword">let</span> <span class="variable">globalVar</span> = <span class="string">"I'm global!"</span>;
+
+<span class="comment">// Function to demonstrate scope</span>
+<span class="keyword">function</span> <span class="function">demonstrateScope</span>() {
+    <span class="comment">// Local variable</span>
+    <span class="keyword">let</span> <span class="variable">localVar</span> = <span class="string">"I'm local!"</span>;
+    
+    <span class="function">console.log</span>(<span class="string">"Inside function - Global:"</span>, <span class="variable">globalVar</span>);
+    <span class="function">console.log</span>(<span class="string">"Inside function - Local:"</span>, <span class="variable">localVar</span>);
+}
+
+<span class="function">demonstrateScope</span>();
+<span class="function">console.log</span>(<span class="string">"Outside function - Global:"</span>, <span class="variable">globalVar</span>);
+
+<span class="comment">// Try to access local variable outside (will cause error)</span>
+<span class="keyword">try</span> {
+    <span class="function">console.log</span>(<span class="variable">localVar</span>);
+} <span class="keyword">catch</span> (<span class="variable">error</span>) {
+    <span class="function">console.log</span>(<span class="string">"Error accessing localVar:"</span>, <span class="variable">error.message</span>);
+}
+            </div>
+            
+            <button class="run-button" onclick="runTask8()">
+                <i class="bi bi-play-fill"></i> Run Code
+            </button>
+            
+            <div class="console-output" id="output8"></div>
+        </div>
+
+        <!-- Task 9: Using typeof Operator -->
+        <div class="task-card">
+            <div class="task-number">9</div>
+            <h3 class="mb-3">Using typeof Operator <span class="badge-concept">typeof</span></h3>
+            <p class="text-muted mb-3">Check data types of different variables.</p>
+            
+            <div class="code-block">
+<span class="comment">// Variables of different types</span>
+<span class="keyword">let</span> <span class="variable">myString</span> = <span class="string">"Hello World"</span>;
+<span class="keyword">let</span> <span class="variable">myNumber</span> = <span class="number">42</span>;
+<span class="keyword">let</span> <span class="variable">myBoolean</span> = <span class="boolean">true</span>;
+<span class="keyword">let</span> <span class="variable">myArray</span> = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];
+<span class="keyword">let</span> <span class="variable">myObject</span> = {<span class="variable">key</span>: <span class="string">"value"</span>};
+<span class="keyword">let</span> <span class="variable">myUndefined</span>;
+
+<span class="comment">// Check types</span>
+<span class="function">console.log</span>(<span class="string">"typeof myString:"</span>, <span class="keyword">typeof</span> <span class="variable">myString</span>);
+<span class="function">console.log</span>(<span class="string">"typeof myNumber:"</span>, <span class="keyword">typeof</span> <span class="variable">myNumber</span>);
+<span class="function">console.log</span>(<span class="string">"typeof myBoolean:"</span>, <span class="keyword">typeof</span> <span class="variable">myBoolean</span>);
+<span class="function">console.log</span>(<span class="string">"typeof myArray:"</span>, <span class="keyword">typeof</span> <span class="variable">myArray</span>);
+<span class="function">console.log</span>(<span class="string">"typeof myObject:"</span>, <span class="keyword">typeof</span> <span class="variable">myObject</span>);
+<span class="function">console.log</span>(<span class="string">"typeof myUndefined:"</span>, <span class="keyword">typeof</span> <span class="variable">myUndefined</span>);
+            </div>
+            
+            <button class="run-button" onclick="runTask9()">
+                <i class="bi bi-play-fill"></i> Run Code
+            </button>
+            
+            <div class="console-output" id="output9"></div>
+        </div>
+
+        <!-- Task 10: Changing Variable Values -->
+        <div class="task-card">
+            <div class="task-number">10</div>
+            <h3 class="mb-3">Changing Variable Values <span class="badge-concept">Increment</span></h3>
+            <p class="text-muted mb-3">Initialize a counter and update its value.</p>
+            
+            <div class="code-block">
+<span class="comment">// Initialize counter</span>
+<span class="keyword">let</span> <span class="variable">counter</span> = <span class="number">5</span>;
+<span class="function">console.log</span>(<span class="string">"Initial counter value:"</span>, <span class="variable">counter</span>);
+
+<span class="comment">// Different ways to increment</span>
+<span class="variable">counter</span> = <span class="variable">counter</span> + <span class="number">1</span>; <span class="comment">// Method 1</span>
+<span class="function">console.log</span>(<span class="string">"After adding 1:"</span>, <span class="variable">counter</span>);
+
+<span class="variable">counter</span> += <span class="number">1</span>; <span class="comment">// Method 2</span>
+<span class="function">console.log</span>(<span class="string">"After += 1:"</span>, <span class="variable">counter</span>);
+
+<span class="variable">counter</span>++; <span class="comment">// Method 3</span>
+<span class="function">console.log</span>(<span class="string">"After counter++:"</span>, <span class="variable">counter</span>);
+
+<span class="function">console.log</span>(<span class="string">"Final counter value:"</span>, <span class="variable">counter</span>);
+            </div>
+            
+            <button class="run-button" onclick="runTask10()">
+                <i class="bi bi-play-fill"></i> Run Code
+            </button>
+            
+            <div class="console-output" id="output10"></div>
+        </div>
+
+        <!-- Summary -->
+        <div class="task-card">
+            <div class="text-center">
+                <h3 class="mb-4">🎉 Congratulations!</h3>
+                <p class="lead mb-4">You've completed all Day 8 JavaScript fundamentals!</p>
+                <div class="row g-3">
+                    <div class="col-md-3 col-6">
+                        <div class="bg-primary text-white p-3 rounded">
+                            <h5>Variables</h5>
+                            <small>let, const, var</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="bg-success text-white p-3 rounded">
+                            <h5>Data Types</h5>
+                            <small>string, number, boolean</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="bg-warning text-white p-3 rounded">
+                            <h5>Arrays</h5>
+                            <small>indexing, methods</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="bg-info text-white p-3 rounded">
+                            <h5>Objects</h5>
+                            <small>properties, methods</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Helper function to display output
+        function displayOutput(taskId, content) {
+            const output = document.getElementById(`output${taskId}`);
+            output.innerHTML = content;
+        }
+
+        // Task 1: Declare Variables
+        function runTask1() {
+            let output = '';
+            try {
+                let name = "Alex Johnson";
+                let age = 25;
+                let isStudent = true;
+                
+                output += `<div class="info">Name: ${name}</div>`;
+                output += `<div class="info">Age: ${age}</div>`;
+                output += `<div class="info">Is Student: ${isStudent}</div>`;
+                output += `<div style="color: #9ca3af; margin-top: 10px;">✓ Variables declared successfully!</div>`;
+            } catch (error) {
+                output += `<div class="error">Error: ${error.message}</div>`;
+            }
+            displayOutput(1, output);
+        }
+
+        // Task 2: Calculate Total
+        function runTask2() {
+            let output = '';
+            try {
+                let num1 = 15;
+                let num2 = 27;
+                let sum = num1 + num2;
+                
+                output += `<div class="info">${num1} + ${num2} = ${sum}</div>`;
+                output += `<div class="info">Sum: ${sum}</div>`;
+                output += `<div style="color: #9ca3af; margin-top: 10px;">✓ Calculation completed!</div>`;
+            } catch (error) {
+                output += `<div class="error">Error: ${error.message}</div>`;
+            }
+            displayOutput(2, output);
+        }
+
+        
