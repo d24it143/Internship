@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alex Rivera - Digital Creator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Header (Task 1) */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        /* Navigation (Task 2) */
+        .nav {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 100px;
+            padding: 2rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Sidebar (Task 10) */
+        .sidebar {
+            position: fixed;
+            left: -250px;
+            top: 100px;
+            width: 250px;
+            height: calc(100vh - 100px);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            transition: left 0.3s ease;
+            z-index: 999;
+            padding: 1rem;
+            box-shadow: 2px 0 20px rgba(0,0,0,0.1);
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            text-decoration: none;
+            color: #333;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .sidebar-toggle {
+            display: none;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        /* Button (Task 3) */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: #ff6b6b;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background: #ff5252;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Cards (Task 5) */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        /* List (Task 6) */
+        .feature-list {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .feature-list ul {
+            list-style: none;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-list i {
+            color: #667eea;
+            font-size: 1.2rem;
+            width: 20px;
+        }
+
+        /* Progress Bar (Task 7) */
+        .progress-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .progress-item {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 5px;
+            transition: width 1s ease;
+        }
+
+        /* Forms (Task 8, 11) */
+        .forms-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* Pricing Table (Task 9) */
+        .pricing-table {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card.featured {
+            transform: scale(1.05);
+            border: 3px solid #667eea;
+        }
+
+        .pricing-card.featured::before {
+            content: "POPULAR";
+            position: absolute;
+            top: 1rem;
+            right: -2rem;
+            background: #ff6b6b;
+            color: white;
+            padding: 0.25rem 3rem;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .pricing-features li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+        }
+
+        .pricing-features i {
+            color: #4caf50;
+        }
+
+        /* Timeline (Task 12) */
+        .timeline {
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: #667eea;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) {
+            justify-content: flex-end;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-right: 2rem;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: 2rem;
+        }
+
+        .timeline-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 15px;
+            width: 45%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .timeline-icon {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        /* Gallery (Task 13) */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #667eea;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            background: #667eea;
+            color: white;
+        }
+
+        /* Toggle Switch (Task 14) */
+        .toggle-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 80px;
+            height: 40px;
+            margin: 1rem;
+        }
+
+        .toggle-input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #ccc;
+            border-radius: 40px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8px;
+        }
+
+        .toggle-slider i {
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .toggle-slider .fa-moon {
+            color: #333;
+        }
+
+        .toggle-slider .fa-sun {
+            color: #ffd700;
+        }
+
+        .toggle-input:checked + .toggle-slider {
+            background: #667eea;
+        }
+
+        .toggle-slider::before {
+            position: absolute;
+            content: "";
+            height: 32px;
+            width: 32px;
+            left: 4px;
+            bottom: 4px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .toggle-input:checked + .toggle-slider::before {
+            transform: translateX(40px);
+        }
+
+        /* Breadcrumb (Task 15) */
+        .breadcrumb {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        .breadcrumb ol {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .breadcrumb a {
+            color: #667eea;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb span {
+            color: #333;
+        }
+
+        /* Tabs (Task 16) */
+        .tabs-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+
+        .tabs-nav {
+            display: flex;
+            background: #f8f9fa;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-content {
+            padding: 2rem;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Countdown (Task 17) */
+        .countdown {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .countdown-timer {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .countdown-item {
+            text-align: center;
+        }
+
+        .countdown-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+        }
+
+        .countdown-label {
+            font-size: 0.9rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Rating (Task 18) */
+        .rating-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .rating {
+            font-size: 2rem;
+            margin: 1rem 0;
+        }
+
+        .rating i {
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .rating i.active,
+        .rating i:hover {
+            color: #ffd700;
+        }
+
+        /* Dropdown (Task 19) */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            margin: 1rem;
+        }
+
+        .dropdown-button {
+            background: #667eea;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            z-index: 1;
+            top: 100%;
+            left: 0;
+            overflow: hidden;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 0.75rem 1rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.3s ease;
+        }
+
+        .dropdown-content a:hover {
+            background: #f8f9fa;
+        }
+
+        .dropdown.open .dropdown-content {
+            display: block;
+        }
+
+        /* Footer (Task 4) */
+        .footer {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 3rem 2rem 1rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Responsive Design (Task 20) */
+        @media (max-width: 768px) {
+            .sidebar-toggle {
+                display: block;
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+                color: #667eea;
+            }
+
+            .nav {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .countdown-timer {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item {
+                justify-content: flex-start !important;
+            }
+
+            .timeline-item .timeline-content {
+                margin-left: 3rem !important;
+                margin-right: 0 !important;
+                width: calc(100% - 3rem);
+            }
+
+            .timeline-icon {
+                left: 20px !important;
+                transform: none !important;
+            }
+
+            .tabs-nav {
+                flex-direction: column;
+            }
+
+            .forms-section {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-table {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card.featured {
+                transform: none;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Dark mode styles */
+        body.dark-mode {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: #ecf0f1;
+        }
+
+        body.dark-mode .header,
+        body.dark-mode .sidebar,
+        body.dark-mode .card,
+        body.dark-mode .feature-list,
+        body.dark-mode .progress-section,
+        body.dark-mode .form-container,
+        body.dark-mode .pricing-card,
+        body.dark-mode .timeline-content,
+        body.dark-mode .toggle-container,
+        body.dark-mode .breadcrumb,
+        body.dark-mode .tabs-container,
+        body.dark-mode .countdown,
+        body.dark-mode .rating-section,
+        body.dark-mode .footer {
+            background: rgba(52, 73, 94, 0.95);
+            color: #ecf0f1;
+        }
+
+        body.dark-mode .gallery-item {
+            background: rgba(52, 73, 94, 0.95);
+        }
+
+        body.dark-mode .nav a,
+        body.dark-mode .sidebar-menu a {
+            color: #ecf0f1;
+        }
+
+        body.dark-mode .form-group input,
+        body.dark-mode .form-group textarea {
+            background: rgba(52, 73, 94, 0.8);
+            border-color: #34495e;
+            color: #ecf0f1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Task 1: Header with Font Awesome icon and title -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-rocket"></i>
+                <span>Alex Rivera</span>
+            </div>
+            <!-- Task 2: Navigation with Font Awesome icons -->
+            <nav class="nav">
+                <a href="#home"><i class="fas fa-home"></i> Home</a>
+                <a href="#about"><i class="fas fa-user"></i> About</a>
+                <a href="#contact"><i class="fas fa-envelope"></i> Contact</a>
+            </nav>
+            <button class="sidebar-toggle" onclick="toggleSidebar()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Task 10: Sidebar menu with Font Awesome icons -->
+    <aside class="sidebar" id="sidebar">
+        <ul class="sidebar-menu">
+            <li><a href="#dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="#projects"><i class="fas fa-folder"></i> Projects</a></li>
+            <li><a href="#analytics"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+            <li><a href="#settings"><i class="fas fa-cog"></i> Settings</a></li>
+            <li><a href="#profile"><i class="fas fa-user-circle"></i> Profile</a></li>
+            <li><a href="#help"><i class="fas fa-question-circle"></i> Help</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero fade-in-up">
+            <h1>Digital Creator & Designer</h1>
+            <p>Crafting beautiful experiences with passion and precision</p>
+            <!-- Task 3: Button with Font Awesome icon -->
+            <button class="btn" onclick="scrollToContact()">
+                <i class="fas fa-paper-plane"></i>
+                Get In Touch
+            </button>
+        </section>
+
+        <!-- Task 15: Breadcrumb navigation -->
+        <nav class="breadcrumb">
+            <ol>
+                <li><a href="#"><i class="fas fa-home"></i> Home</a></li>
+                <li><i class="fas fa-chevron-right"></i></li>
+                <li><a href="#"><i class="fas fa-user"></i> Portfolio</a></li>
+                <li><i class="fas fa-chevron-right"></i></li>
+                <li><span><i class="fas fa-star"></i> Featured Work</span></li>
+            </ol>
+        </nav>
+
+        <!-- Task 5: Cards with Font Awesome icons -->
+        <section class="cards-grid">
+            <div class="card fade-in-up">
+                <div class="card-icon">
+                    <i class="fas fa-paint-brush"></i>
+                </div>
+                <h3>Creative Design</h3>
+                <p>Transforming ideas into stunning visual experiences that captivate and inspire audiences worldwide.</p>
+            </div>
+            <div class="card fade-in-up">
+                <div class="card-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3>Development</h3>
+                <p>Building robust, scalable solutions with cutting-edge technologies and best practices.</p>
+            </div>
+            <div class="card fade-in-up">
+                <div class="card-icon">
+                    <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h3>Mobile First</h3>
+                <p>Creating responsive experiences that work seamlessly across all devices and platforms.</p>
+            </div>
+        </section>
+
+        <!-- Task 6: List with different Font Awesome icons -->
+        <section class="feature-list">
+            <h2>What I Bring to the Table</h2>
+            <ul>
+                <li><i class="fas fa-lightbulb"></i> Creative problem-solving approach</li>
+                <li><i class="fas fa-clock"></i> Always deliver projects on time</li>
+                <li><i class="fas fa-handshake"></i> Strong client relationships</li>
+                <li><i class="fas fa-trophy"></i> Award-winning designs</li>
+                <li><i class="fas fa-heart"></i> Passionate about quality work</li>
+                <li><i class="fas fa-users"></i> Great team collaboration</li>
+            </ul>
+        </section>
+
+        <!-- Task 7: Progress bars with Font Awesome icons -->
+        <section class="progress-section">
+            <h2>My Skills</h2>
+            <div class="progress-item">
+                <div class="progress-header">
+                    <i class="fab fa-html5"></i>
+                    <span>Frontend Development</span>
+                    <span style="margin-left: auto;">95%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 95%"></div>
+                </div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-header">
+                    <i class="fas fa-palette"></i>
+                    <span>UI/UX Design</span>
+                    <span style="margin-left: auto;">88%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 88%"></div>
+                </div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-header">
+                    <i class="fas fa-server"></i>
+                    <span>Backend Development</span>
+                    <span style="margin-left: auto;">75%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 75%"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Task 14: Toggle switch -->
+        <section class="toggle-container">
+            <h2>Theme Preference</h2>
+            <p>Switch between light and dark modes</p>
+            <label class="toggle-switch">
+                <input type="checkbox" class="toggle-input" onchange="toggleTheme()">
+                <span class="toggle-slider">
+                    <i class="fas fa-sun"></i>
+                    <i class="fas fa-moon"></i>
+                </span>
+            </label>
+        </section>
+
+        <!-- Task 16: Tabbed interface with Font Awesome icons -->
+        <section class="tabs-container">
+            <div class="tabs-nav">
+                <button class="tab-button active" onclick="openTab(event, 'services')">
+                    <i class="fas fa-briefcase"></i> Services
+                </button>
+                <button class="tab-button" onclick="openTab(event, 'portfolio')">
+                    <i class="fas fa-image"></i> Portfolio
+                </button>
+                <button class="tab-button" onclick="openTab(event, 'testimonials')">
+                    <i class="fas fa-quote-left"></i> Testimonials
+                </button>
+            </div>
+            <div id="services" class="tab-content active">
+                <h3>My Services</h3>
+                <p>I offer a comprehensive range of digital services to help bring your vision to life. From concept to completion, I ensure every project meets the highest standards of quality and creativity.</p>
+                <div class="dropdown">
+                    <button class="dropdown-button" onclick="toggleDropdown()">
+                        <i class="fas fa-chevron-down"></i> View All Services
+                    </button>
+                    <!-- Task 19: Dropdown menu with Font Awesome icons -->
+                    <div class="dropdown-content" id="dropdown">
+                        <a href="#"><i class="fas fa-desktop"></i> Web Development</a>
+                        <a href="#"><i class="fas fa-mobile"></i> Mobile Apps</a>
+                        <a href="#"><i class="fas fa-paint-brush"></i> UI/UX Design</a>
+                        <a href="#"><i class="fas fa-search"></i> SEO Optimization</a>
+                        <a href="#"><i class="fas fa-chart-line"></i> Analytics Setup</a>
+                    </div>
+                </div>
+            </div>
+            <div id="portfolio" class="tab-content">
+                <h3>Portfolio Highlights</h3>
+                <p>Take a look at some of my recent work and projects that showcase my skills and creativity.</p>
+                <!-- Task 13: Gallery with Font Awesome icons as placeholders -->
+                <div class="gallery">
+                    <div class="gallery-item"><i class="fas fa-camera"></i></div>
+                    <div class="gallery-item"><i class="fas fa-video"></i></div>
+                    <div class="gallery-item"><i class="fas fa-palette"></i></div>
+                    <div class="gallery-item"><i class="fas fa-code"></i></div>
+                    <div class="gallery-item"><i class="fas fa-mobile-alt"></i></div>
+                    <div class="gallery-item"><i class="fas fa-globe"></i></div>
+                </div>
+            </div>
+            <div id="testimonials" class="tab-content">
+                <h3>What Clients Say</h3>
+                <p>Don't just take my word for it - here's what my clients have to say about working with me.</p>
+                <!-- Task 18: Rating system -->
+                <div class="rating-section">
+                    <h4>Rate My Work</h4>
+                    <div class="rating" id="rating">
+                        <i class="fas fa-star" onclick="setRating(1)"></i>
+                        <i class="fas fa-star" onclick="setRating(2)"></i>
+                        <i class="fas fa-star" onclick="setRating(3)"></i>
+                        <i class="fas fa-star" onclick="setRating(4)"></i>
+                        <i class="fas fa-star" onclick="setRating(5)"></i>
+                    </div>
+                    <p id="rating-text">Click the stars to rate!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Task 17: Countdown timer -->
+        <section class="countdown">
+            <h2>Next Project Launch</h2>
+            <p>Exciting new project coming soon!</p>
+            <div class="countdown-timer">
+                <div class="countdown-item">
+                    <span class="countdown-number" id="days">15</span>
+                    <div class="countdown-label">
+                        <i class="fas fa-calendar-day"></i> Days
+                    </div>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="hours">08</span>
+                    <div class="countdown-label">
+                        <i class="fas fa-clock"></i> Hours
+                    </div>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="minutes">23</span>
+                    <div class="countdown-label">
+                        <i class="fas fa-stopwatch"></i> Minutes
+                    </div>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number" id="seconds">45</span>
+                    <div class="countdown-label">
+                        <i class="fas fa-hourglass-half"></i> Seconds
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Task 9: Pricing table with Font Awesome icons -->
+        <section class="pricing-table">
+            <div class="pricing-card">
+                <h3>Basic</h3>
+                <div style="font-size: 2rem; color: #667eea; margin: 1rem 0;">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h2>$299</h2>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> Responsive Design</li>
+                    <li><i class="fas fa-check"></i> 5 Pages</li>
+                    <li><i class="fas fa-check"></i> Basic SEO</li>
+                    <li><i class="fas fa-times" style="color: #e74c3c;"></i> Advanced Features</li>
+                </ul>
+                <button class="btn">
+                    <i class="fas fa-shopping-cart"></i> Choose Plan
+                </button>
+            </div>
+            <div class="pricing-card featured">
+                <h3>Professional</h3>
+                <div style="font-size: 2rem; color: #667eea; margin: 1rem 0;">
+                    <i class="fas fa-star"></i>
+                </div>
+                <h2>$599</h2>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> Everything in Basic</li>
+                    <li><i class="fas fa-check"></i> 10 Pages</li>
+                    <li><i class="fas fa-check"></i> Advanced SEO</li>
+                    <li><i class="fas fa-check"></i> Contact Forms</li>
+                    <li><i class="fas fa-check"></i> Analytics Setup</li>
+                </ul>
+                <button class="btn">
+                    <i class="fas fa-crown"></i> Choose Plan
+                </button>
+            </div>
+            <div class="pricing-card">
+                <h3>Enterprise</h3>
+                <div style="font-size: 2rem; color: #667eea; margin: 1rem 0;">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <h2>$999</h2>
+                <ul class="pricing-features">
+                    <li><i class="fas fa-check"></i> Everything in Pro</li>
+                    <li><i class="fas fa-check"></i> Unlimited Pages</li>
+                    <li><i class="fas fa-check"></i> E-commerce Ready</li>
+                    <li><i class="fas fa-check"></i> Priority Support</li>
+                    <li><i class="fas fa-check"></i> Custom Features</li>
+                </ul>
+                <button class="btn">
+                    <i class="fas fa-diamond"></i> Choose Plan
+                </button>
+            </div>
+        </section>
+
+        <!-- Task 12: Timeline with Font Awesome icons -->
+        <section class="timeline">
+            <h2 style="text-align: center; margin-bottom: 3rem; color: white;">My Journey</h2>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h4>Started Freelancing</h4>
+                    <p>Began my journey as a freelance designer, working with small businesses and startups.</p>
+                    <small>2020</small>
+                </div>
+                <div class="timeline-icon">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h4>First Major Client</h4>
+                    <p>Landed my first major client and delivered a complete rebrand project.</p>
+                    <small>2021</small>
+                </div>
+                <div class="timeline-icon">
+                    <i class="fas fa-handshake"></i>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h4>Team Expansion</h4>
+                    <p>Grew my network and started collaborating with other talented professionals.</p>
+                    <small>2022</small>
+                </div>
+                <div class="timeline-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h4>Award Recognition</h4>
+                    <p>Received industry recognition for outstanding design work and client satisfaction.</p>
+                    <small>2023</small>
+                </div>
+                <div class="timeline-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h4>Looking Forward</h4>
+                    <p>Continuing to push boundaries and create amazing experiences for clients worldwide.</p>
+                    <small>2024+</small>
+                </div>
+                <div class="timeline-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Task 8 & 11: Contact form and Login form with Font Awesome icons -->
+        <section class="forms-section" id="contact">
+            <div class="form-container">
+                <h2>Get In Touch</h2>
+                <p>Let's discuss your next project!</p>
+                <form>
+                    <div class="form-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-phone"></i>
+                        <input type="tel" placeholder="Your Phone">
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-comment"></i>
+                        <textarea placeholder="Your Message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+            </div>
+            <div class="form-container">
+                <h2>Client Login</h2>
+                <p>Access your project dashboard</p>
+                <form>
+                    <div class="form-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" placeholder="Username" required>
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" placeholder="Password" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; padding-left: 3rem;">
+                            <input type="checkbox">
+                            <i class="fas fa-remember"></i> Remember me
+                        </label>
+                    </div>
+                    <button type="submit" class="btn">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                    <p style="text-align: center; margin-top: 1rem;">
+                        <a href="#" style="color: #667eea; text-decoration: none;">
+                            <i class="fas fa-key"></i> Forgot Password?
+                        </a>
+                    </p>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Task 4: Footer with social media icons -->
+    <footer class="footer">
+        <div class="footer-content">
+            <h3>Let's Connect</h3>
+            <p>Follow me on social media for updates and inspiration</p>
+            <div class="social-icons">
+                <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-dribbble"></i></a>
+            </div>
+            <p>&copy; 2024 Alex Rivera. Made with <i class="fas fa-heart" style="color: #ff6b6b;"></i> and lots of <i class="fas fa-coffee"></i></p>
+        </div>
+    </footer>
+
+    <script>
+        // Sidebar toggle function
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        // Theme toggle function
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        // Tab functionality
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // Dropdown toggle function
+        function toggleDropdown() {
+            document.getElementById('dropdown').parentElement.classList.toggle('open');
+        }
+
+        // Rating system
+        let currentRating = 0;
+        function setRating(rating) {
+            currentRating = rating;
+            const stars = document.querySelectorAll('#rating i');
+            const ratingText = document.getElementById('rating-text');
+            
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+            
+            const messages = [
+                'Please rate my work!',
+                'Thanks for the feedback!',
+                'I appreciate your input!',
+                'Great! Thanks for rating!',
+                'Excellent! Thanks for the review!',
+                'Amazing! You made my day! ⭐'
+            ];
+            ratingText.textContent = messages[rating];
+        }
+
+        // Countdown timer
+        function updateCountdown() {
+            // Set target date (15 days from now for demo)
+            const targetDate = new Date();
+            targetDate.setDate(targetDate.getDate() + 15);
+            targetDate.setHours(23, 59, 59, 999);
+            
+            const now = new Date().getTime();
+            const distance = targetDate.getTime() - now;
+            
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            
+            if (distance < 0) {
+                document.querySelector('.countdown-timer').innerHTML = "<h3>🎉 Project Launched! 🎉</h3>";
+            }
+        }
+
+        // Scroll to contact function
+        function scrollToContact() {
+            document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.querySelector('.dropdown');
+            if (!dropdown.contains(event.target)) {
+                dropdown.classList.remove('open');
+            }
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.querySelector('.sidebar-toggle');
+            if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
+                sidebar.classList.remove('open');
+            }
+        });
+
+        // Initialize countdown timer
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // Animate progress bars on scroll
+        function animateProgressBars() {
+            const progressBars = document.querySelectorAll('.progress-fill');
+            progressBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 100);
+            });
+        }
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in-up');
+                    if (entry.target.classList.contains('progress-section')) {
+                        setTimeout(animateProgressBars, 200);
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements for animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const animateElements = document.querySelectorAll('.card, .progress-section, .timeline-item');
+            animateElements.forEach(el => observer.observe(el));
+        });
+
+        // Add some interactive hover effects
+        document.querySelectorAll('.gallery-item').forEach(item => {
+            item.addEventListener('click', () => {
+                item.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    item.style.transform = 'scale(1.05)';
+                }, 100);
+                setTimeout(() => {
+                    item.style.transform = '';
+                }, 200);
+            });
+        });
+
+        // Form validation with visual feedback
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const button = form.querySelector('.btn');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+                button.style.background = '#4caf50';
+                
+                setTimeout(() => {
+                    button.innerHTML = '<i class="fas fa-check"></i> Sent!';
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.style.background = '';
+                        form.reset();
+                    }, 2000);
+                }, 1500);
+            });
+        });
+
+        // Add some personality with random quotes
+        const quotes = [
+            "Design is not just what it looks like - design is how it works. - Steve Jobs",
+            "The best way to predict the future is to create it. - Peter Drucker",
+            "Creativity is intelligence having fun. - Albert Einstein",
+            "Good design is obvious. Great design is transparent. - Joe Sparano"
+        ];
+
+        // Show random quote in console for developers who inspect :)
+        console.log(`💡 ${quotes[Math.floor(Math.random() * quotes.length)]}`);
+        console.log("👋 Hey there! Thanks for checking out my code. Let's build something amazing together!");
+    </script>
+</body>
+</html>
