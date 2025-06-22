@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLI Task Simulator - Day 10</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: #1a1a1a;
+            border-right: 2px solid #333;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-item {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .task-item:hover {
+            background: #333;
+        }
+
+        .task-item.completed {
+            background: #2d5a2d;
+            border-left-color: #4CAF50;
+        }
+
+        .task-item.active {
+            background: #2d4a5a;
+            border-left-color: #2196F3;
+        }
+
+        .terminal {
+            flex: 1;
+            background: #000;
+            padding: 20px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .terminal-header {
+            background: #333;
+            padding: 10px;
+            margin: -20px -20px 20px -20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .terminal-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .close { background: #ff5f57; }
+        .minimize { background: #ffbd2e; }
+        .maximize { background: #28ca42; }
+
+        .terminal-title {
+            color: #fff;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
+        .output {
+            margin-bottom: 20px;
+            min-height: 400px;
+        }
+
+        .command-line {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+
+        .prompt {
+            color: #0f0;
+            margin-right: 5px;
+        }
+
+        .command {
+            color: #fff;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+            position: sticky;
+            bottom: 0;
+            background: #000;
+            padding: 10px 0;
+        }
+
+        .current-prompt {
+            color: #0f0;
+            margin-right: 5px;
+        }
+
+        #commandInput {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            outline: none;
+            flex: 1;
+        }
+
+        .cursor {
+            background: #fff;
+            width: 2px;
+            height: 20px;
+            display: inline-block;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .error {
+            color: #ff4444;
+        }
+
+        .success {
+            color: #44ff44;
+        }
+
+        .info {
+            color: #4444ff;
+        }
+
+        .file-content {
+            color: #ffff88;
+            margin-left: 20px;
+        }
+
+        .help-panel {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 15px;
+            max-width: 300px;
+            display: none;
+        }
+
+        .help-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #333;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+        }
+
+        .progress-bar {
+            background: #333;
+            height: 4px;
+            margin: 10px 0;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #4CAF50, #2196F3);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .task-description {
+            font-size: 12px;
+            color: #888;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3 style="color: #4CAF50; margin-bottom: 20px;">📋 CLI Tasks - Day 10</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p style="color: #888; font-size: 12px; margin-bottom: 20px;">Progress: <span id="progressText">0/10</span></p>
+            
+            <ol class="task-list">
+                <li class="task-item active" data-task="1">
+                    <strong>Navigate to Documents</strong>
+                    <div class="task-description">Use 'cd' to go to Documents folder</div>
+                </li>
+                <li class="task-item" data-task="2">
+                    <strong>Create New Folder</strong>
+                    <div class="task-description">Make 'MyCLIProject' with 'md' command</div>
+                </li>
+                <li class="task-item" data-task="3">
+                    <strong>List Contents</strong>
+                    <div class="task-description">Use 'dir' to view folder contents</div>
+                </li>
+                <li class="task-item" data-task="4">
+                    <strong>Create Text File</strong>
+                    <div class="task-description">Use 'copy con' to create notes.txt</div>
+                </li>
+                <li class="task-item" data-task="5">
+                    <strong>View File Contents</strong>
+                    <div class="task-description">Use 'type' to display file content</div>
+                </li>
+                <li class="task-item" data-task="6">
+                    <strong>Rename File</strong>
+                    <div class="task-description">Rename with 'rename' command</div>
+                </li>
+                <li class="task-item" data-task="7">
+                    <strong>Copy File</strong>
+                    <div class="task-description">Make backup with 'copy' command</div>
+                </li>
+                <li class="task-item" data-task="8">
+                    <strong>Move Backup</strong>
+                    <div class="task-description">Create folder and move file</div>
+                </li>
+                <li class="task-item" data-task="9">
+                    <strong>Delete Original</strong>
+                    <div class="task-description">Remove file with 'del' command</div>
+                </li>
+                <li class="task-item" data-task="10">
+                    <strong>Clear Screen</strong>
+                    <div class="task-description">Use 'cls' to clear terminal</div>
+                </li>
+            </ol>
+        </div>
+
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="terminal-button close"></div>
+                <div class="terminal-button minimize"></div>
+                <div class="terminal-button maximize"></div>
+                <div class="terminal-title">Command Prompt - CLI Task Simulator</div>
+            </div>
+
+            <div class="output" id="output">
+                <div class="command-line">
+                    <span class="success">🚀 Welcome to CLI Task Simulator - Day 10!</span>
+                </div>
+                <div class="command-line">
+                    <span class="info">Complete all 10 tasks by typing the correct commands.</span>
+                </div>
+                <div class="command-line">
+                    <span class="info">Type 'help' for available commands or 'hint' for current task help.</span>
+                </div>
+                <div class="command-line">
+                    <span class="info">Current Task: Navigate to your Documents folder using 'cd Documents'</span>
+                </div>
+                <br>
+            </div>
+
+            <div class="input-container">
+                <span class="current-prompt" id="currentPrompt">C:\Users\Student></span>
+                <input type="text" id="commandInput" autocomplete="off" autofocus>
+                <span class="cursor"></span>
+            </div>
+        </div>
+    </div>
+
+    <button class="help-toggle" onclick="toggleHelp()">Help</button>
+    <div class="help-panel" id="helpPanel">
+        <h4>Available Commands:</h4>
+        <p><strong>help</strong> - Show all commands</p>
+        <p><strong>hint</strong> - Get hint for current task</p>
+        <p><strong>reset</strong> - Reset the simulator</p>
+        <p><strong>skip</strong> - Skip current task (for testing)</p>
+        <br>
+        <p>Type commands exactly as they appear in Windows CLI!</p>
+    </div>
+
+    <script>
+        class CLISimulator {
+            constructor() {
+                this.currentPath = 'C:\\Users\\Student';
+                this.currentTask = 1;
+                this.completedTasks = 0;
+                this.fileSystem = {
+                    'C:\\Users\\Student': [],
+                    'C:\\Users\\Student\\Documents': [],
+                    'C:\\Users\\Student\\Documents\\MyCLIProject': [],
+                    'C:\\Users\\Student\\Documents\\MyCLIProject\\Backup': []
+                };
+                this.files = {};
+                this.awaitingInput = false;
+                this.tempContent = '';
+                
+                this.setupEventListeners();
+                this.updatePrompt();
+            }
+
+            setupEventListeners() {
+                const input = document.getElementById('commandInput');
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        this.processCommand(input.value.trim());
+                        input.value = '';
+                    }
+                });
+
+                // Auto-focus input when clicking anywhere in terminal
+                document.querySelector('.terminal').addEventListener('click', () => {
+                    input.focus();
+                });
+            }
+
+            processCommand(command) {
+                if (!command) return;
+
+                this.addOutput(`<span class="prompt">${this.getCurrentPrompt()}</span>${command}`);
+
+                if (this.awaitingInput) {
+                    this.handleFileInput(command);
+                    return;
+                }
+
+                const parts = command.toLowerCase().split(' ');
+                const cmd = parts[0];
+
+                switch (cmd) {
+                    case 'help':
+                        this.showHelp();
+                        break;
+                    case 'hint':
+                        this.showHint();
+                        break;
+                    case 'reset':
+                        location.reload();
+                        break;
+                    case 'skip':
+                        this.skipTask();
+                        break;
+                    case 'cd':
+                        this.changeDirectory(parts.slice(1).join(' '));
+                        break;
+                    case 'md':
+                    case 'mkdir':
+                        this.makeDirectory(parts.slice(1).join(' '));
+                        break;
+                    case 'dir':
+                        this.listDirectory();
+                        break;
+                    case 'copy':
+                        if (parts[1] === 'con') {
+                            this.createFileWithCopyCon(parts.slice(2).join(' '));
+                        } else {
+                            this.copyFile(parts.slice(1).join(' '));
+                        }
+                        break;
+                    case 'type':
+                        this.typeFile(parts.slice(1).join(' '));
+                        break;
+                    case 'rename':
+                    case 'ren':
+                        this.renameFile(command);
+                        break;
+                    case 'move':
+                    case 'mv':
+                        this.moveFile(command);
+                        break;
+                    case 'del':
+                    case 'delete':
+                        this.deleteFile(parts.slice(1).join(' '));
+                        break;
+                    case 'cls':
+                    case 'clear':
+                        this.clearScreen();
+                        break;
+                    default:
+                        this.addOutput(`<span class="error">'${command}' is not recognized as an internal or external command.</span>`);
+                }
+            }
+
+            changeDirectory(path) {
+                if (!path) {
+                    this.addOutput(this.currentPath);
+                    return;
+                }
+
+                let newPath;
+                if (path.toLowerCase() === 'documents') {
+                    newPath = 'C:\\Users\\Student\\Documents';
+                } else if (path.toLowerCase() === 'mycliproject') {
+                    newPath = 'C:\\Users\\Student\\Documents\\MyCLIProject';
+                } else if (path.toLowerCase() === 'backup') {
+                    newPath = 'C:\\Users\\Student\\Documents\\MyCLIProject\\Backup';
+                } else if (path === '..') {
+                    const parts = this.currentPath.split('\\');
+                    parts.pop();
+                    newPath = parts.join('\\');
+                } else {
+                    this.addOutput(`<span class="error">The system cannot find the path specified.</span>`);
+                    return;
+                }
+
+                if (this.fileSystem[newPath] !== undefined) {
+                    this.currentPath = newPath;
+                    this.updatePrompt();
+                    
+                    if (this.currentTask === 1 && newPath === 'C:\\Users\\Student\\Documents') {
+                        this.completeTask(1);
+                    }
+                } else {
+                    this.addOutput(`<span class="error">The system cannot find the path specified.</span>`);
+                }
+            }
+
+            makeDirectory(name) {
+                if (!name) {
+                    this.addOutput(`<span class="error">The syntax of the command is incorrect.</span>`);
+                    return;
+                }
+
+                const fullPath = `${this.currentPath}\\${name}`;
+                if (this.fileSystem[fullPath] === undefined) {
+                    this.fileSystem[fullPath] = [];
+                    this.fileSystem[this.currentPath].push({ name, type: 'dir' });
+                    this.addOutput(`Directory created: ${name}`);
+                    
+                    if (this.currentTask === 2 && name.toLowerCase() === 'mycliproject') {
+                        this.completeTask(2);
+                    } else if (this.currentTask === 8 && name.toLowerCase() === 'backup') {
+                        // Part of task 8, don't complete yet
+                    }
+                } else {
+                    this.addOutput(`<span class="error">A subdirectory or file ${name} already exists.</span>`);
+                }
+            }
+
+            listDirectory() {
+                const contents = this.fileSystem[this.currentPath];
+                this.addOutput(`Directory of ${this.currentPath}`);
+                this.addOutput('');
+                
+                if (contents.length === 0) {
+                    this.addOutput('File Not Found');
+                } else {
+                    contents.forEach(item => {
+                        const type = item.type === 'dir' ? '&lt;DIR&gt;' : '     ';
+                        this.addOutput(`${type}      ${item.name}`);
+                    });
+                }
+                this.addOutput('');
+                
+                if (this.currentTask === 3) {
+                    this.completeTask(3);
+                }
+            }
+
+            createFileWithCopyCon(filename) {
+                if (!filename) {
+                    this.addOutput(`<span class="error">The syntax of the command is incorrect.</span>`);
+                    return;
+                }
+
+                this.awaitingInput = true;
+                this.tempContent = '';
+                this.currentFile = filename;
+                this.addOutput(`Creating file: ${filename}`);
+                this.addOutput(`Type your content and press Ctrl+Z then Enter to save:`);
+            }
+
+            handleFileInput(input) {
+                if (input === '^Z' || input.toLowerCase() === 'ctrl+z') {
+                    // Save the file
+                    const filePath = `${this.currentPath}\\${this.currentFile}`;
+                    this.files[filePath] = this.tempContent;
+                    this.fileSystem[this.currentPath].push({ name: this.currentFile, type: 'file' });
+                    
+                    this.addOutput(`File saved: ${this.currentFile}`);
+                    this.awaitingInput = false;
+                    
+                    if (this.currentTask === 4 && this.currentFile.toLowerCase() === 'notes.txt') {
+                        this.completeTask(4);
+                    }
+                } else {
+                    this.tempContent += input + '\n';
+                    this.addOutput(input);
+                }
+            }
+
+            typeFile(filename) {
+                if (!filename) {
+                    this.addOutput(`<span class="error">The syntax of the command is incorrect.</span>`);
+                    return;
+                }
+
+                const filePath = `${this.currentPath}\\${filename}`;
+                if (this.files[filePath]) {
+                    this.addOutput(`<span class="file-content">${this.files[filePath]}</span>`);
+                    
+                    if (this.currentTask === 5) {
+                        this.completeTask(5);
+                    }
+                } else {
+                    this.addOutput(`<span class="error">The system cannot find the file specified.</span>`);
+                }
+            }
+
+            renameFile(command) {
+                const parts = command.split(' ');
+                if (parts.length < 3) {
+                    this.addOutput(`<span class="error">The syntax of the command is incorrect.</span>`);
+                    return;
+                }
+
+                const oldName = parts[1];
+                const newName = parts[2];
+                const oldPath = `${this.currentPath}\\${oldName}`;
+                const newPath = `${this.currentPath}\\${newName}`;
+
+                if (this.files[oldPath]) {
+                    this.files[newPath] = this.files[oldPath];
+                    delete this.files[oldPath];
+                    
+                    const fileIndex = this.fileSystem[this.currentPath].findIndex(f => f.name === oldName);
+                    if (fileIndex !== -1) {
+                        this.fileSystem[this.currentPath][fileIndex].name = newName;
+                    }
+                    
+                    this.addOutput(`File renamed: ${oldName} -> ${newName}`);
+                    
+                    if (this.currentTask === 6 && oldName.toLowerCase() === 'notes.txt' && newName.toLowerCase() === 'my_notes.txt') {
+                        this.completeTask(6);
+                    }
+                } else {
+                    this.addOutput(`<span class="error">The system cannot find the file specified.</span>`);
+                }
+            }
+
+            copyFile(command) {
+                const parts = command.split(' ');
+                if (parts.length < 2) {
+                    this.addOutput(`<span class="error">The syntax of the command is incorrect.</span>`);
+                    return;
+                }
+
+                const source = parts[0];
+                const dest = parts[1];
+                const sourcePath = `${this.currentPath}\\${source}`;
+                const destPath = `${this.currentPath}\\${dest}`;
+
+                if (this.files[sourcePath]) {
+                    this.files[destPath] = this.files[sourcePath];
+                    this.fileSystem[this.currentPath].push({ name: dest, type: 'file' });
+                    
+                    this.addOutput(`1 file(s) copied.`);
+                    
+                    if (this.currentTask === 7 && source.toLowerCase() === 'my_notes.txt' && dest.toLowerCase() === 'backup_notes.txt') {
+                        this.completeTask(7);
+                    }
+                } else {
+                    this.addOutput(`<span class="error">The system cannot find the file specified.</span>`);
+                }
+            }
+
+            moveFile(command) {
+                const parts = command.split(' ');
+                if (parts.length < 3) {
+                    this.addOutput(`<span class="error">The syntax of the command is incorrect.</span>`);
+                    return;
+                }
+
+                const filename = parts[1];
+                const destination = parts[2];
+                const sourcePath = `${this.currentPath}\\${filename}`;
+                const destPath = `${this.currentPath}\\${destination}\\${filename}`;
+
+                if (this.files[sourcePath]) {
+                    this.files[destPath] = this.files[sourcePath];
+                    delete this.files[sourcePath];
+                    
+                    const fileIndex = this.fileSystem[this.currentPath].findIndex(f => f.name === filename);
+                    if (fileIndex !== -1) {
+                        this.fileSystem[this.currentPath].splice(fileIndex, 1);
+                    }
+                    
+                    if (this.fileSystem[`${this.currentPath}\\${destination}`]) {
+                        this.fileSystem[`${this.currentPath}\\${destination}`].push({ name: filename, type: 'file' });
+                    }
+                    
+                    this.addOutput(`1 file(s) moved.`);
+                    
+                    if (this.currentTask === 8 && filename.toLowerCase() === 'backup_notes.txt' && destination.toLowerCase() === 'backup') {
+                        this.completeTask(8);
+                    }
+                } else {
+                    this.addOutput(`<span class="error">The system cannot find the file specified.</span>`);
+                }
+            }
+
+            deleteFile(filename) {
+                if (!filename) {
+                    this.addOutput(`<span class="error">The syntax of the command is incorrect.</span>`);
+                    return;
+                }
+
+                const filePath = `${this.currentPath}\\${filename}`;
+                if (this.files[filePath]) {
+                    delete this.files[filePath];
+                    
+                    const fileIndex = this.fileSystem[this.currentPath].findIndex(f => f.name === filename);
+                    if (fileIndex !== -1) {
+                        this.fileSystem[this.currentPath].splice(fileIndex, 1);
+                    }
+                    
+                    this.addOutput(`File deleted: ${filename}`);
+                    
+                    if (this.currentTask === 9 && filename.toLowerCase() === 'my_notes.txt') {
+                        this.completeTask(9);
+                    }
+                } else {
+                    this.addOutput(`<span class="error">Could Not Find ${filename}</span>`);
+                }
+            }
+
+            clearScreen() {
+                document.getElementById('output').innerHTML = '';
+                if (this.currentTask === 10) {
+                    this.completeTask(10);
+                }
+            }
+
+            showHelp() {
+                this.addOutput(`<span class="info">Available Commands:</span>`);
+                this.addOutput(`cd [directory] - Change directory`);
+                this.addOutput(`md [name] - Make directory`);
+                this.addOutput(`dir - List directory contents`);
+                this.addOutput(`copy con [filename] - Create text file`);
+                this.addOutput(`type [filename] - Display file contents`);
+                this.addOutput(`rename [old] [new] - Rename file`);
+                this.addOutput(`copy [source] [dest] - Copy file`);
+                this.addOutput(`move [file] [dest] - Move file`);
+                this.addOutput(`del [filename] - Delete file`);
+                this.addOutput(`cls - Clear screen`);
+                this.addOutput(``);
+            }
+
+            showHint() {
+                const hints = {
+                    1: "Navigate to Documents folder using: cd Documents",
+                    2: "Create MyCLIProject folder using: md MyCLIProject",
+                    3: "List the contents using: dir",
+                    4: "Create notes.txt using: copy con notes.txt (then type content and press Ctrl+Z)",
+                    5: "Display file contents using: type notes.txt",
+                    6: "Rename the file using: rename notes.txt my_notes.txt",
+                    7: "Copy the file using: copy my_notes.txt backup_notes.txt",
+                    8: "Create Backup folder with 'md Backup', then move file with: move backup_notes.txt Backup",
+                    9: "Delete the original file using: del my_notes.txt",
+                    10: "Clear the screen using: cls"
+                };
+                
+                this.addOutput(`<span class="info">Hint for Task ${this.currentTask}: ${hints[this.currentTask]}</span>`);
+            }
+
+            skipTask() {
+                this.completeTask(this.currentTask);
+                this.addOutput(`<span class="info">Task ${this.currentTask - 1} skipped!</span>`);
+            }
+
+            completeTask(taskNum) {
+                this.completedTasks++;
+                this.updateProgress();
+                
+                // Mark task as completed
+                const taskItem = document.querySelector(`[data-task="${taskNum}"]`);
+                taskItem.classList.remove('active');
+                taskItem.classList.add('completed');
+                
+                this.addOutput(`<span class="success">✅ Task ${taskNum} completed!</span>`);
+                
+                if (taskNum < 10) {
+                    this.currentTask = taskNum + 1;
+                    const nextTaskItem = document.querySelector(`[data-task="${this.currentTask}"]`);
+                    nextTaskItem.classList.add('active');
+                    
+                    const nextHints = {
+                        2: "Next: Create a new folder named 'MyCLIProject' using 'md MyCLIProject'",
+                        3: "Next: List the contents of MyCLIProject folder using 'dir'",
+                        4: "Next: Create notes.txt using 'copy con notes.txt'",
+                        5: "Next: View the file contents using 'type notes.txt'",
+                        6: "Next: Rename the file using 'rename notes.txt my_notes.txt'",
+                        7: "Next: Copy the file using 'copy my_notes.txt backup_notes.txt'",
+                        8: "Next: Create Backup folder and move the backup file",
+                        9: "Next: Delete my_notes.txt using 'del my_notes.txt'",
+                        10: "Next: Clear the screen using 'cls'"
+                    };
+                    
+                    if (nextHints[this.currentTask]) {
+                        this.addOutput(`<span class="info">${nextHints[this.currentTask]}</span>`);
+                    }
+                } else {
+                    this.addOutput(``);
+                    this.addOutput(`<span class="success">🎉 Congratulations! All tasks completed!</span>`);
+                    this.addOutput(`<span class="success">You have successfully mastered CLI file operations!</span>`);
+                }
+            }
+
+            updateProgress() {
+                const progressPercent = (this.completedTasks / 10) * 100;
+                document.getElementById('progressFill').style.width = `${progressPercent}%`;
+                document.getElementById('progressText').textContent = `${this.completedTasks}/10`;
+            }
+
+            addOutput(text) {
+                const output = document.getElementById('output');
+                const line = document.createElement('div');
+                line.className = 'command-line';
+                line.innerHTML = text;
+                output.appendChild(line);
+                output.scrollTop = output.scrollHeight;
+            }
+
+            getCurrentPrompt() {
+                return `${this.currentPath}>`;
+            }
+
+            updatePrompt() {
+                document.getElementById('currentPrompt').textContent = this.getCurrentPrompt();
+            }
+        }
+
+        function toggleHelp() {
+            const helpPanel = document.getElementById('helpPanel');
+            helpPanel.style.display = helpPanel.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Initialize the simulator
+        const simulator = new CLISimulator();
+
+        // Auto-focus input on page load
+        window.addEventListener('load', () => {
+            document.getElementById('commandInput').focus();
+        });
+    </script>
+</body>
+</html>
